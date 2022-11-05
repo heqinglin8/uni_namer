@@ -1,0 +1,178 @@
+<template>
+   
+    <view class="tabs">
+        <scroll-view id="tab-bar" class="scroll-h" :scroll-x="true" :show-scrollbar="false" :scroll-into-view="scrollInto">
+            <view v-for="(tab,index) in tabBars" :key="tab.id" class="uni-tab-item" :id="tab.id" :data-current="index" @click="ontabtap">
+                <text class="uni-tab-item-title" :class="tabIndex==index ? 'uni-tab-item-title-active' : ''">{{tab.name}}</text>
+            </view>
+        </scroll-view>
+        <view class="line-h"></view>
+        <swiper :current="tabIndex" class="swiper-box" style="flex: 1;" :duration="300" @change="ontabchange">
+            <swiper-item class="swiper-item" v-for="(tab,index1) in newsList" :key="index1">
+                <pageFromNaming/>
+            </swiper-item>
+        </swiper> 
+    </view>
+</template>
+<script>
+    import pageFromNaming from './page-from-naming/page-from-naming.vue';
+    const tabBars = [
+    { id: 'baobaoquming', name: '宝宝取名', checked: true },
+    { id: 'shijing', name: '诗经取名'},
+    { id: 'chuci', name: '楚辞取名' },
+    { id: 'tangshi', name: '唐诗取名' },
+    { id: 'songci', name: '宋词取名' },
+    { id: 'yuefu', name: '乐诗取名' },
+    { id: 'gushi', name: '古诗取名' },
+    { id: 'cifu', name: '辞赋取名' },
+  ];
+    export default {
+        
+        components: {
+            pageFromNaming
+        },
+        data() {
+            return {
+                newsList: [],
+                tabIndex: 0,
+                tabBars: tabBars,
+                scrollInto: "",
+                showTips: false,
+                navigateFlag: false,
+                pulling: false,
+                refreshIcon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAMAAABg3Am1AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAB5QTFRFcHBw3Nzct7e39vb2ycnJioqK7e3tpqam29vb////D8oK7wAAAAp0Uk5T////////////ALLMLM8AAABxSURBVHja7JVBDoAgDASrjqj//7CJBi90iyYeOHTPMwmFZrHjYyyFYYUy1bwUZqtJIYVxhf1a6u0R7iUvWsCcrEtwJHp8MwMdvh2amHduiZD3rpWId9+BgPd7Cc2LIkPyqvlQvKxKBJ//Qwq/CacAAwDUv0a0YuKhzgAAAABJRU5ErkJggg=="
+            }
+        },
+        onLoad() {
+            setTimeout(()=>{
+              this.tabBars.forEach((tabBar) => {
+                  this.newsList.push({
+                      data: [],
+                      isLoading: false,
+                      refreshText: "",
+                      loadingText: tabBar.name
+                  });
+              });
+            },350)
+        },
+        methods: {
+            goDetail(e) {
+                if (this.navigateFlag) {
+                    return;
+                }
+                this.navigateFlag = true;
+                uni.navigateTo({
+                    url: './detail/detail?title=' + e.title
+                });
+                setTimeout(() => {
+                    this.navigateFlag = false;
+                }, 200)
+            },
+            ontabtap(e) {
+                let index = e.target.dataset.current || e.currentTarget.dataset.current;
+                console.log("ontabtap index:: " + index);
+                this.switchTab(index);
+            },
+            ontabchange(e) {
+                let index = e.target.current || e.detail.current;
+                console.log("ontabchange index:: " + index);
+                this.switchTab(index);
+            },
+            switchTab(index) {
+                if (this.tabIndex === index) {
+                    return;
+                }
+                this.tabIndex = index;
+                this.scrollInto = this.tabBars[index].id;
+            }
+        }
+    }
+</script>
+
+<style>
+    /* #ifndef APP-PLUS */
+    page {
+        width: 100%;
+        min-height: 100%;
+        display: flex;
+    }
+
+    /* #endif */
+
+    .tabs {
+        flex: 1;
+        flex-direction: column;
+        overflow: hidden;
+        background-color: #ffffff;
+        /* #ifndef APP-PLUS */
+        height: 100vh;
+        /* #endif */
+    }
+
+    .scroll-h {
+        width: 750rpx;
+		/* #ifdef H5 */
+		width:100%;
+		/* #endif */
+		height: 80rpx;
+        flex-direction: row;
+        /* #ifndef APP-PLUS */
+        white-space: nowrap;
+        /* #endif */
+        /* flex-wrap: nowrap; */
+        /* border-color: #cccccc;
+		border-bottom-style: solid;
+		border-bottom-width: 1px; */
+    }
+
+    .line-h {
+        height: 1rpx;
+        background-color: #cccccc;
+    }
+
+    .uni-tab-item {
+        /* #ifndef APP-PLUS */
+        display: inline-block;
+        /* #endif */
+        flex-wrap: nowrap;
+        padding-left: 34rpx;
+        padding-right: 34rpx;
+    }
+
+    .uni-tab-item-title {
+        color: #555;
+        font-size: 30rpx;
+        height: 80rpx;
+        line-height: 80rpx;
+        flex-wrap: nowrap;
+        /* #ifndef APP-PLUS */
+        white-space: nowrap;
+        /* #endif */
+    }
+
+    .uni-tab-item-title-active {
+        color: #007AFF;
+    }
+
+    .swiper-box {
+        flex: 1;
+    }
+
+    .swiper-item {
+        flex: 1;
+        flex-direction: row;
+    }
+
+    .loading-more {
+        align-items: center;
+        justify-content: center;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        text-align: center;
+    }
+
+    .loading-more-text {
+        font-size: 28rpx;
+        color: #999;
+    }
+</style>

@@ -1,9 +1,9 @@
 {
 	"pages": [ //pages数组中第一项表示应用启动页,
 		{
-			"path": "pages/main/main",
+			"path": "pages/tabbar/tabbar",
 			"style": {
-				"navigationBarTitleText": "登录模板"
+				"navigationBarTitleText": "宝宝起名"
 			}
 		}, {
 			"path": "pages/login/login",
@@ -31,6 +31,25 @@
 				"navigationBarTitleText": "我的"
 			}
 		}
+		, {
+			"path": "pages/parse_name/parse_name",
+			"style": {
+				"navigationBarTitleText": "解名"
+			}
+		}
+		, {
+			"path": "pages/tabbar/tabbar",
+			"style": {
+				"navigationBarTitleText": "起名"
+			}
+		}
+		, {
+			"path": "pages/order/order",
+			"style": {
+				"navigationBarTitleText": "订单"
+			}
+		}
+
 		// #ifdef APP-PLUS
 		, {
 			"path": "pages/invite/invite",
@@ -59,17 +78,33 @@
 		"color": "#7a7e83",
 		"selectedColor": "#0faeff",
 		"backgroundColor": "#ffffff",
-		"list": [{
-			"pagePath": "pages/main/main",
-			"text": "首页",
+		"list": [
+			{
+			"pagePath": "pages/tabbar/tabbar",
+			"text": "起名",
 			"iconPath": "static/img/home.png",
 			"selectedIconPath": "static/img/homeHL.png"
-		}, {
+		}
+		,
+		{
+			"pagePath": "pages/parse_name/parse_name",
+			"text": "解名",
+			"iconPath": "static/img/home.png",
+			"selectedIconPath": "static/img/homeHL.png"
+		}
+		, {
+			"pagePath": "pages/order/order",
+			"text": "订单",
+			"iconPath": "static/img/user.png",
+			"selectedIconPath": "static/img/userHL.png"
+		}
+		, {
 			"pagePath": "pages/user/user",
 			"text": "我的",
 			"iconPath": "static/img/user.png",
 			"selectedIconPath": "static/img/userHL.png"
-		}]
+		}
+	]
 	},
 	"globalStyle": {
 		"navigationBarTextStyle": "white",

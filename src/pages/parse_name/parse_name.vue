@@ -2,7 +2,7 @@
 	<view class="content">
 		<view v-if="hasLogin" class="hello">
 			<view class="title">
-				您好啊 {{userName}}，您已成功登录。
+				您好 {{userName}}，您已成功登录。
 			</view>
 			<view class="ul">
 				<view>这是 uni-app 带登录模板的示例App首页。</view>
@@ -11,7 +11,7 @@
 		</view>
 		<view v-if="!hasLogin" class="hello">
 			<view class="title">
-				解析您的姓名的含义，测试姓名凶吉，打分哦。
+				您好 游客。
 			</view>
 			<view class="ul">
 				<view>这是 uni-app 带登录模板的示例App首页。</view>
