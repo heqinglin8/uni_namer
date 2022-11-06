@@ -1,12 +1,11 @@
 <template>
     <view class="content-warp">
-        <page-head :title="title"></page-head>
         <view class="uni-padding-wrap top-wrap">
-            <text class="left-rignt-btn">取消</text>
+            <text class="left-rignt-btn" @click="onLeft" >取消</text>
             <view class="uni-title">
-				日期：{{year}}年{{month}}月{{day}}日
+				時間：{{year}}年{{month}}月{{day}}日{{hour}}時{{minute}}分
 			</view>
-            <text class="left-rignt-btn uni-right">确定</text>
+            <text class="left-rignt-btn uni-right" @click="onRight">确定</text>
 		</view>
         <picker-view v-if="visible" :indicator-style="indicatorStyle" :mask-style="maskStyle" :value="value" @change="bindChange">
             <picker-view-column>
@@ -30,6 +29,7 @@
 
 <script>
     export default {
+        emits: ['onCancel', 'onOk'],
         data () {
             const date = new Date()
             const years = []
@@ -42,6 +42,7 @@
             const hour = date.getHours()
             const minutes = []
             const minute = date.getMinutes()
+            console.log('hql data hour = '+ hour + '，minute = ' + minute)
 
             for (let i = 1990; i <= date.getFullYear(); i++) {
                 years.push(i)
@@ -62,6 +63,7 @@
             for (let i = 1; i <= 60; i++) {
                 minutes.push(i)
             }
+            
             return {
                 title: 'picker-view',
                 years,
@@ -74,7 +76,7 @@
                 hour,
                 minutes,
                 minute,
-                value: [9999, month - 1, day - 1],
+                value: [9999, month - 1, day - 1, hour - 1, minute - 1],
 				/**
 				 * 解决动态设置indicator-style不生效的问题
 				 */
@@ -92,10 +94,30 @@
         methods: {
             bindChange (e) {
                 const val = e.detail.value
+                console.log("bindChange val = "+val)
                 this.year = this.years[val[0]]
                 this.month = this.months[val[1]]
                 this.day = this.days[val[2]]
+                this.hour = this.hours[val[3]]
+                this.minute = this.minutes[val[4]]
             }
+            ,
+            onLeft(){
+                console.log('hql onLeft')
+                this.$emit('onCancel');
+            }
+            ,
+            onRight(){
+                console.log('hql onRight')
+                this.$emit('onResult', [
+                    this.year,
+                    this.month,
+                    this.day,
+                    this.hour,
+                    this.minute,
+            ]);
+            this.$emit('onCancel');
+           }
         }
     }
 </script>

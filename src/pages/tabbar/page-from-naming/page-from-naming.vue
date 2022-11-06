@@ -1,6 +1,7 @@
 <template>
 
-<scroll-view enableBackToTop="true" scroll-y>
+<view class="page-wrap">
+    <scroll-view enableBackToTop="true" scroll-y>
         <view class="uni-padding-wrap uni-common-mt">
                 <form @submit="formSubmit" @reset="formReset">
                     <view class="uni-form-item uni-flex">
@@ -37,16 +38,17 @@
                         <button type="primary" form-type="submit">开始起名</button>
                     </view>
                 </form>
-                <view>
-			<!-- 普通弹窗 -->
+        </view>	
+    </scroll-view>
+
+       <!-- 普通弹窗 -->
 			<uni-popup ref="popup" :type="type" background-color="#fff" @change="change">
 				<view class="popup-content" :class="{ 'popup-height': type === 'left' || type === 'right' }">
-                    <date-picker-view />
+                    <date-picker-view @onResult="onResult" @onCancel="onCancel"/>
                 </view>
 			</uni-popup>
-		</view>
-        </view>		
-    </scroll-view>
+</view>
+
 
 </template>
 
@@ -65,6 +67,13 @@ export default {
     methods: {
 			change(e) {
 				console.log('当前模式：' + e.type + ',状态：' + e.show);
+			},
+            onCancel() {
+				console.log('hql onCancel ');
+                this.$refs.popup.close()
+			},
+            onResult(r) {
+				console.log('hql onResult '+ r);
 			},
 			toggle(type) {
                 console.log('toggle type = ' + type);
@@ -115,5 +124,9 @@ export default {
 	.text {
 		font-size: 12px;
 		color: #333;
+	}
+
+    .page-wrap {
+		width: 100%;
 	}
 </style>
