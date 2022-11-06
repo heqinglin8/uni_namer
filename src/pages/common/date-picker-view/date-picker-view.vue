@@ -94,12 +94,17 @@
         methods: {
             bindChange (e) {
                 const val = e.detail.value
-                console.log("bindChange val = "+val)
                 this.year = this.years[val[0]]
                 this.month = this.months[val[1]]
                 this.day = this.days[val[2]]
                 this.hour = this.hours[val[3]]
                 this.minute = this.minutes[val[4]]
+                console.log("bindChange year = "+this.year
+                + "\nmonth="+this.month
+                + "\day="+this.day
+                + "\hour="+this.hour
+                + "\nmonth="+this.minute
+                )
             }
             ,
             onLeft(){
@@ -109,13 +114,13 @@
             ,
             onRight(){
                 console.log('hql onRight')
-                this.$emit('onResult', [
-                    this.year,
-                    this.month,
-                    this.day,
-                    this.hour,
-                    this.minute,
-            ]);
+                this.$emit('onResult', {
+                   'year' : this.year,
+                   'month' : this.month,
+                   'day' : this.day,
+                   'hour' : this.hour,
+                   'minute' : this.minute,
+                })
             this.$emit('onCancel');
            }
         }
@@ -152,5 +157,6 @@
     }
     .content-warp{
         width: 100%;
+        background-color: #fff;
     }
 </style>

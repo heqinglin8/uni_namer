@@ -148,7 +148,7 @@ form {
 	display:flex;
 	width:100%;
 	padding:10rpx 0;
-	justify-content: center;
+	align-items: end;
 }
 .uni-form-item .title{
 	padding:10rpx 25rpx;
@@ -161,7 +161,7 @@ form {
 }
 .uni-input {
 	height: 50rpx;
-	padding: 15rpx 25rpx;
+	padding: 10rpx 25rpx;
 	line-height:50rpx;
 	font-size:28rpx;
 	background:#FFF;
@@ -1460,5 +1460,11 @@ radio-group label, checkbox-group label{
 
 .uni-right {
 	text-align: right;
+}
+
+.uni-end {
+	display: flex;
+	justify-content : flex-end;
+	width: 100%;
 }
 

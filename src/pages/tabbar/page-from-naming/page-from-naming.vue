@@ -5,12 +5,12 @@
         <view class="uni-padding-wrap uni-common-mt">
                 <form @submit="formSubmit" @reset="formReset">
                     <view class="uni-form-item uni-flex">
-                        <view class="title">姓名&nbsp;&nbsp;</view>
-                        <input class="uni-input" name="nickname" placeholder="请输入姓名" />
+                        <view class="title">姓名</view>
+                        <input class="uni-input uni-form-item-r uni-end" name="nickname" placeholder="请输入姓名" />
                     </view>
                     <view class="uni-form-item uni-flex">
-                        <view class="title">性别&nbsp;&nbsp;&nbsp;&nbsp;</view>
-                        <radio-group name="gender" class="uni-flex">
+                        <view class="title">性别</view>
+                        <radio-group name="gender" class="uni-flex uni-form-item-r uni-end">
                             <label>
                                 <radio value="男" checked="true"/><text>男</text>
                             </label>
@@ -20,8 +20,8 @@
                         </radio-group>
                     </view>
                     <view class="uni-form-item uni-flex">
-                        <view class="title">单双名</view>
-                        <radio-group name="gender" class="uni-flex">
+                        <view class="title">单双名&emsp14;</view>
+                        <radio-group name="gender" class="uni-flex uni-form-item-r uni-end">
                             <label>
                                 <radio value="0" checked="true"/><text>双</text>
                             </label>
@@ -32,7 +32,7 @@
                     </view>
                     <view class="uni-form-item uni-flex">
                         <view class="title">出生时间</view>
-                        <text class="title uni-flex-item" @click="toggle('bottom')">2022-10-22 22:20</text>
+                        <text class="title uni-form-item-r uni-end" @click="toggle('bottom')">{{birthdate}}</text>
                     </view>
                     <view class="uni-btn-v">
                         <button type="primary" form-type="submit">开始起名</button>
@@ -60,8 +60,14 @@ export default {
 			DatePickerView
     },
     data() {
+        const date = new Date()
 			return {
-				type: 'center'
+				type: 'center',
+                birthdate:date.getFullYear()+'年'
+                         +date.getMonth()+'月'
+                         +date.getDate()+'日 '
+                         +date.getHours()+'時'
+                         +date.getMinutes()+'分'
 			}
 		},
     methods: {
@@ -74,6 +80,11 @@ export default {
 			},
             onResult(r) {
 				console.log('hql onResult '+ r);
+                this.birthdate = r['year']+'年'
+                         +r['month']+'月'
+                         +r['day']+'日 '
+                         +r['hour']+'時'
+                         +r['minute']+'分'
 			},
 			toggle(type) {
                 console.log('toggle type = ' + type);
@@ -129,4 +140,7 @@ export default {
     .page-wrap {
 		width: 100%;
 	}
+    .uni-form-item-r{
+        width: 100%;
+    }
 </style>

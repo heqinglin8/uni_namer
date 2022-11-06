@@ -3,7 +3,7 @@
 		{
 			"path": "pages/tabbar/tabbar",
 			"style": {
-				"navigationBarTitleText": "宝宝起名"
+				"navigationBarTitleText": "起名"
 			}
 		}, {
 			"path": "pages/login/login",
