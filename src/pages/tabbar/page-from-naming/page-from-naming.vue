@@ -20,8 +20,8 @@
                         </radio-group>
                     </view>
                     <view class="uni-form-item uni-flex">
-                        <view class="title">单双名&emsp14;</view>
-                        <radio-group name="gender" class="uni-flex uni-form-item-r uni-end">
+                        <view class="title">单双名</view>
+                        <radio-group name="onetwo" class="uni-flex uni-form-item-r uni-end">
                             <label>
                                 <radio value="0" checked="true"/><text>双</text>
                             </label>
@@ -56,10 +56,17 @@
  import DatePickerView from "../../common/date-picker-view/date-picker-view.vue"
  
 export default {
+    props: {
+			tab: {
+                id:String,
+                name:String,
+            }
+		},
     components: {
 			DatePickerView
     },
     data() {
+        // console.log('tab = '+JSON.stringify(this.tab))
         const date = new Date()
 			return {
 				type: 'center',
@@ -91,7 +98,21 @@ export default {
 				this.type = type
 				// open 方法传入参数 等同在 uni-popup 组件上绑定 type属性
 				this.$refs.popup.open(type)
-			}
+			},
+
+            formSubmit: function (event) {
+                const {
+					errors,
+					value
+				} = event.detail
+                const{
+                    nickname,
+                    gender,
+                    onetwo
+                } = value
+                console.log('formSubmit tab = '+JSON.stringify(this.tab)+',nickName='+nickname+',gender='+gender+",onetwo="+onetwo+',birthdate=',this.birthdate);
+
+		}
   }
 }
   
