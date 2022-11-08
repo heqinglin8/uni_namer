@@ -9,7 +9,7 @@
         <view class="line-h"></view>
         <swiper :current="tabIndex" class="swiper-box" style="flex: 1;" :duration="300" @change="ontabchange">
             <swiper-item class="swiper-item" v-for="(tab,index1) in newsList" :key="index1">
-                <pageFromNaming :tab="tab.tab"/>
+                <pageFromNaming :tab="tab.tab" @onGenNames = "onGenNames"/>
             </swiper-item>
         </swiper> 
     </view>
@@ -84,6 +84,13 @@
                 }
                 this.tabIndex = index;
                 this.scrollInto = this.tabBars[index].id;
+            },
+
+            onGenNames(formData){
+                console.log('onGenNames formData = '+formData)
+                  uni.navigateTo({
+                        url: '../list2detail-list/list2detail-list?payload='+JSON.stringify(formData)
+				});
             }
         }
     }

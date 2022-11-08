@@ -5,8 +5,8 @@
         <view class="uni-padding-wrap uni-common-mt">
                 <form @submit="formSubmit" @reset="formReset">
                     <view class="uni-form-item uni-flex">
-                        <view class="title">姓名</view>
-                        <input class="uni-input uni-form-item-r uni-end" name="nickname" placeholder="请输入姓名" />
+                        <view class="title">姓氏</view>
+                        <input class="uni-input uni-form-item-r uni-end" name="surname" placeholder="请输入姓名" />
                     </view>
                     <view class="uni-form-item uni-flex">
                         <view class="title">性别</view>
@@ -47,15 +47,23 @@
                     <date-picker-view @onResult="onResult" @onCancel="onCancel"/>
                 </view>
 			</uni-popup>
+
+            <view>
+			<!-- 提示信息弹窗 -->
+			<uni-popup ref="message" type="message">
+				<uni-popup-message :type="msgType" :message="messageText" :duration="2000"></uni-popup-message>
+			</uni-popup>
+		    </view>
 </view>
 
 
 </template>
 
 <script>
- import DatePickerView from "../../common/date-picker-view/date-picker-view.vue"
- 
+ import DatePickerView from "../../common/date-picker-view/date-picker-view.vue";
+ import uniPopupMessage from "../../../components/uni-popup-message/uni-popup-message.vue"
 export default {
+    emits: ['onGenNames'],
     props: {
 			tab: {
                 id:String,
@@ -67,9 +75,11 @@ export default {
     },
     data() {
         // console.log('tab = '+JSON.stringify(this.tab))
-        const date = new Date()
+        const date = new Date();
 			return {
 				type: 'center',
+                msgType: 'success',
+                messageText:'成功！',
                 birthdate:date.getFullYear()+'年'
                          +date.getMonth()+'月'
                          +date.getDate()+'日 '
@@ -106,13 +116,36 @@ export default {
 					value
 				} = event.detail
                 const{
-                    nickname,
+                    surname,
                     gender,
                     onetwo
                 } = value
-                console.log('formSubmit tab = '+JSON.stringify(this.tab)+',nickName='+nickname+',gender='+gender+",onetwo="+onetwo+',birthdate=',this.birthdate);
+                console.log('formSubmit aaa tab = '+JSON.stringify(this.tab)+
+                ',surname = '+surname+
+                ',gender = '+gender+
+                ",onetwo = "+onetwo+
+                ',birthdate = '+this.birthdate
+                );
+                if(surname == '' || surname == undefined){
+                //    alert('请输入姓氏')
+                this.messageToggle('error','请输入姓氏');
+                   return
+                }
+                var birthdate = this.birthdate
+                this.$emit('onGenNames',{
+                    'tab':this.tab,
+                    surname,
+                    gender,
+                    onetwo,
+                    birthdate
+                });
+		},
 
-		}
+        messageToggle(type, msg) {
+				this.msgType = type
+				this.messageText = msg
+				this.$refs.message.open()
+        },
   }
 }
   

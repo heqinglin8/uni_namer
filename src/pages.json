@@ -49,6 +49,35 @@
 				"navigationBarTitleText": "订单"
 			}
 		}
+		,
+		{
+			"path": "pages/list2detail-list/list2detail-list",
+			"style": {
+				"navigationBarTitleText": "列表到详情示例",
+				"enablePullDownRefresh": true
+			}
+		},
+
+		{
+			"path": "pages/list2detail-detail/list2detail-detail",
+			"style": {
+				"navigationBarTitleText": "详情",
+				"app-plus": {
+					"titleNView": {
+						"type": "transparent",
+						"buttons": [{
+							"type": "share"
+						}]
+					}
+				},
+				"h5": {
+					"titleNView": {
+						"type": "transparent",
+						"buttons": []
+					}
+				}
+			}
+		}
 
 		// #ifdef APP-PLUS
 		, {
