@@ -17,7 +17,7 @@
 <script>
     import pageFromNaming from './page-from-naming/page-from-naming.vue';
     const tabBars = [
-    { id: 'baobaoquming', name: '宝宝取名', checked: true },
+    { id: 'all', name: '宝宝取名', checked: true },
     { id: 'shijing', name: '诗经取名'},
     { id: 'chuci', name: '楚辞取名' },
     { id: 'tangshi', name: '唐诗取名' },
