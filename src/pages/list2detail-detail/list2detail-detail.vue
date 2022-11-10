@@ -69,6 +69,7 @@
 			uni.setNavigationBarTitle({
 				title: this.banner.title
 			});
+			this.htmlNodes =  this.banner.content
 			this.getDetail();
 		},
 		onShareAppMessage() {

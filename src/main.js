@@ -1,3 +1,4 @@
+import { loader } from '@dcloudio/uni-cli-shared/lib/url-loader'
 import Vue from 'vue'
 import App from './App'
 

@@ -2,11 +2,12 @@ import $ from 'jquery';
 import { log } from './debugTools';
 import rand from './rand';
 import { debugMode } from './config';
+const tryNumMax = 3; //重试次数
 
 class Namer {
   constructor() {
     this.loading = false;
-    this.book = null;
+    this.bookMap = null
   }
 
   // TODO
@@ -40,17 +41,18 @@ class Namer {
     return str.split('').filter(char => badChars.indexOf(char) === -1).join('');
   }
 
-  genName() {
-    if (!this.book) {
+  genName(id = 'all') {
+    if (!this.bookMap) {
       return null;
     }
-    
-    // const len = this.book.length;
-    // console.log('genName this.book='+JSON.stringify(this.book))
+    const books = this.bookMap.get(id)
     try {
-      const passage = rand.choose(this.book);
+      console.log('genName id=' + id+',book='+books)
+      const passage = rand.choose(books);
+
+      console.log('genName passage=' + JSON.stringify(passage))
       const { content, title, author, book, dynasty } = passage;
-      // console.log('genName,content='+ content +',title=' + title+',author=' + author +',book=' + book +',dynasty=' + dynasty)
+      console.log('genName content='+ content +',title=' + title+',author=' + author +',book=' + book +',dynasty=' + dynasty)
 
       if (!content) {
         return null;
@@ -112,17 +114,36 @@ class Namer {
     return first <= second ? `${arr[first]}${arr[second]}` : `${arr[second]}${arr[first]}`;
   }
 
-  loadBook(book, cb) {
-    console.log('loadBook start book = '+book)
-    // const url = `./json/${book}.json`;
-  const url = `../../../static/json/chuci.json`;
+  loadBook(bookName, cb) {
+    console.log('loadBook start bookName = '+bookName)
+    // const url = `./json/${bookName}.json`;
+  const url = `../../../static/json/${bookName}.json`;
     this.loading = true;
     $.ajax({
       url:url,
       success: (data) => {
-        log(`${book} loaded`);
+        log(`${bookName} loaded`);
         this.loading = false;
-        this.book = data;
+        if(data){
+          if(!this.bookMap){
+            this.bookMap = new Map()
+            console.log('loadBook 111')
+          }
+          this.bookMap.set(bookName, data)
+          console.log('loadBook 222 data = '+this.bookMap.get(bookName))
+        }
+       
+        var allBook = []
+        const bookMap = this.bookMap
+        bookMap.forEach(function(value,key){
+            if(key != 'all'){
+              console.log('key = '+key+',value='+value)
+              allBook = allBook.concat(value)
+            }
+         });
+         console.log('loadBook allBook ='+JSON.stringify(allBook));
+        this.bookMap.set('all', allBook)
+        console.log('loadBook bookName = ' + bookName + ', all = '+ JSON.stringify(this.bookMap.get('all')))
         if (typeof cb === 'function') {
           cb(data);
         }
@@ -134,14 +155,19 @@ class Namer {
     });
   }
 
-  getNames(n){
+  getNames(id, n){
     const nameList = [];
     if(n<=0){
        return nameList
     }
     for (let i = 0; i < n; i++) {
-        const nameObj = this.genName();
-        // console.log('getNames nameObj = '+JSON.stringify(nameObj));
+        var nameObj = this.genName(id);
+        var tryNum = tryNumMax;
+        while(nameObj == null && tryNum > 0){
+            nameObj = this.genName(id);
+            tryNum --
+        }
+        console.log('getNames nameObj = '+JSON.stringify(nameObj));
         nameList.push(nameObj);
     }
 

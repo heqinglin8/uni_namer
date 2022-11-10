@@ -387,7 +387,7 @@ radio-group label, checkbox-group label{
 	align-items: center;
 }
 .uni-list-cell-hover {
-	background-color: #181818;
+	background-color: #eee;
 }
 .uni-list-cell-pd {
 	padding: 22rpx 30rpx;

@@ -22,7 +22,7 @@
 								<text class="title">「{{ value.sentence }}」</text>
 							</view>
 							<view class="uni-media-list-text-bottom">
-								<text>{{value.book}}诗经 • {{value.title}}</text>
+								<text>{{value.book}}•{{value.title}}</text>
 								<text>[{{value.dynasty}}] {{value.author}}</text>
 							</view>
 						</view>
@@ -41,11 +41,19 @@
 
 <script>
 	import { dateUtils } from  '../../common/util.js';
-	import Namer from '../../common/namer/namer.js';
+	import {  
+        mapState,  
+        mapMutations  
+    } from 'vuex'; 
 
 	export default {
+		computed: {  
+            ...mapState(['namer'])  
+        },  
+        methods: {  
+            ...mapMutations(['loadBook'])  
+        },
 		data() {
-		const namer = new Namer();
 			return {
 				banner: {},
 				listData: [],
@@ -59,28 +67,25 @@
 					contentrefresh: '加载中',
 					contentnomore: '没有更多'
 				},
-				namer:  namer,
-				surname:''
+				surname:'',
+				tab:{}
 			};
 		},
 		onLoad(event) {
 			const payload = event.payload;
 			// 目前在某些平台参数会被主动 decode，暂时这样处理。
 		    var formData = {}
-			// console.log('onLoad payload = '+payload)
+			console.log('onLoad payload = '+payload)
 			try {
 				formData = JSON.parse(decodeURIComponent(payload));
 			} catch (error) {
 				formData = JSON.parse(payload);
 			}
 			const {tab, surname} = formData
+			this.tab = tab
 			this.surname = surname
-			this.namer.loadBook(tab.id,(data)=>{
-            // console.log('loadBook SUCCESS data = '+JSON.stringify(data))
-				this.nameListData = this.namer.getNames(10)
-            });
-
-			// console.log('onLoad nameListData = '+ JSON.stringify(this.nameListData))
+			this.nameListData = this.namer.getNames(tab.id,10)
+			console.log('onLoad nameListData = '+ JSON.stringify(this.nameListData))
 			// this.adpid = this.$adpid;
 			// this.getBanner();
 			// this.getList();
@@ -140,20 +145,26 @@
 				// 		console.log('fail' + JSON.stringify(data));
 				// 	}
 				// });
-
-				this.nameListData = this.nameListData.concat(this.namer.getNames(10))
+                if(this.nameListData){
+						//说明已有数据，目前处于上拉加载
+					this.status = 'loading';
+				}
+				this.nameListData = this.nameListData.concat(this.namer.getNames(this.tab.id, 10))
+				this.reload = true;
+				console.log('getList nameListData = '+ JSON.stringify(this.nameListData))
 			},
 			goDetail: function(e) {
 				// 				if (!/前|刚刚/.test(e.published_at)) {
 				// 					e.published_at = dateUtils.format(e.published_at);
 				// 				}
 				let detail = {
-					author_name: e.author_name,
+					author_name: e.author,
 					cover: e.cover,
 					id: e.id,
 					post_id: e.post_id,
-					published_at: e.published_at,
-					title: e.title
+					published_at: e.book+'•'+e.title,
+					title: e.title,
+					content: e.content
 				};
 				uni.navigateTo({
 					url: '../list2detail-detail/list2detail-detail?detailDate=' + encodeURIComponent(JSON.stringify(detail))
@@ -278,6 +289,8 @@
 		display: flex;
 		flex-direction: row;
 		justify-content: space-between;
+		font-size: 22rpx;
+		color: #8f8f94;
 	}
 
 	.uni-list-wrap{

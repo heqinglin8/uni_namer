@@ -12,6 +12,8 @@
 				this.login(uni.getStorageSync('username'))
 			}
 
+			this.loadAllBook()
+
 			// #ifdef APP-PLUS
 			// 一键登录预登陆，可以显著提高登录速度
 			uni.preLogin({
@@ -36,8 +38,19 @@
 		onHide: function() {
 			console.log('App Hide');
 		},
+
 		methods: {
-			...mapMutations(['login', 'setUniverifyErrorMsg', 'setHideUniverify']),
+			...mapMutations(['login', 'setUniverifyErrorMsg', 'setHideUniverify','loadBook']),
+			loadAllBook: function(){
+			console.log('loadAllBook')
+           this.loadBook('chuci');
+		   this.loadBook('cifu');
+		   this.loadBook('gushi');
+		   this.loadBook('shijing');
+		   this.loadBook('songci');
+		   this.loadBook('tangshi');
+		   this.loadBook('yuefu');
+		}
 		}
 	}
 </script>

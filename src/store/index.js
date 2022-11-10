@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import Namer from '../namer/namer.js';
 
 Vue.use(Vuex)
 
@@ -12,7 +13,8 @@ const store = new Vuex.Store({
 		hasLogin: false,
 		userName: "",
 		univerifyErrorMsg: "",
-		hideUniverify: true
+		hideUniverify: true,
+		namer:new Namer()
 	},
 	mutations: {
 		login(state, userName) {
@@ -28,6 +30,11 @@ const store = new Vuex.Store({
 		},
 		setHideUniverify(state, payload = false) {
 			state.hideUniverify = payload
+		},
+		loadBook(state, id){
+			state.namer.loadBook(id,(data)=>{
+				// console.log('loadBook SUCCESS data = '+JSON.stringify(data))
+			});
 		}
 	}
 })
