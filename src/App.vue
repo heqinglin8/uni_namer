@@ -42,14 +42,13 @@
 		methods: {
 			...mapMutations(['login', 'setUniverifyErrorMsg', 'setHideUniverify','loadBook']),
 			loadAllBook: function(){
-			console.log('loadAllBook')
-           this.loadBook('chuci');
-		   this.loadBook('cifu');
-		   this.loadBook('gushi');
-		   this.loadBook('shijing');
-		   this.loadBook('songci');
-		   this.loadBook('tangshi');
-		   this.loadBook('yuefu');
+			this.loadBook('chuci');
+			this.loadBook('cifu');
+			this.loadBook('gushi');
+			this.loadBook('shijing');
+			this.loadBook('songci');
+			this.loadBook('tangshi');
+			this.loadBook('yuefu');
 		}
 		}
 	}

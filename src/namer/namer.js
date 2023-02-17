@@ -47,12 +47,11 @@ class Namer {
     }
     const books = this.bookMap.get(id)
     try {
-      console.log('genName id=' + id+',book='+books)
+      // console.log('genName id=' + id+',book='+books)
       const passage = rand.choose(books);
 
-      console.log('genName passage=' + JSON.stringify(passage))
       const { content, title, author, book, dynasty } = passage;
-      console.log('genName content='+ content +',title=' + title+',author=' + author +',book=' + book +',dynasty=' + dynasty)
+      console.log('title=' + title+',author=' + author +',book=' + book +',dynasty=' + dynasty,'genName content='+ content);
 
       if (!content) {
         return null;
@@ -89,7 +88,6 @@ class Namer {
         book,
         dynasty,
       };
-      console.log('genName name = '+ name)
       return res;
     } catch (err) {
       console.log('genName err ='+err)
@@ -115,9 +113,7 @@ class Namer {
   }
 
   loadBook(bookName, cb) {
-    console.log('loadBook start bookName = '+bookName)
-    // const url = `./json/${bookName}.json`;
-  const url = `../../../static/json/${bookName}.json`;
+    const url = `../../../static/json/${bookName}.json`;
     this.loading = true;
     $.ajax({
       url:url,
@@ -127,23 +123,18 @@ class Namer {
         if(data){
           if(!this.bookMap){
             this.bookMap = new Map()
-            console.log('loadBook 111')
           }
           this.bookMap.set(bookName, data)
-          console.log('loadBook 222 data = '+this.bookMap.get(bookName))
         }
        
         var allBook = []
         const bookMap = this.bookMap
         bookMap.forEach(function(value,key){
             if(key != 'all'){
-              console.log('key = '+key+',value='+value)
               allBook = allBook.concat(value)
             }
          });
-         console.log('loadBook allBook ='+JSON.stringify(allBook));
         this.bookMap.set('all', allBook)
-        console.log('loadBook bookName = ' + bookName + ', all = '+ JSON.stringify(this.bookMap.get('all')))
         if (typeof cb === 'function') {
           cb(data);
         }
@@ -167,7 +158,7 @@ class Namer {
             nameObj = this.genName(id);
             tryNum --
         }
-        console.log('getNames nameObj = '+JSON.stringify(nameObj));
+        // console.log('getNames nameObj = '+JSON.stringify(nameObj));
         nameList.push(nameObj);
     }
 

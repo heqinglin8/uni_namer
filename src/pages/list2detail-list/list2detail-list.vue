@@ -5,7 +5,7 @@
 			<view class="banner-title">{{ banner.title }}</view>
 		</view> -->
 		<view class="uni-list">
-			<block v-for="(value, index) in nameListData" :key="index">
+			<block v-for="(value, index) in listData" :key="index">
 				<view class="uni-list-cell" hover-class="uni-list-cell-hover" @click="goDetail(value)">
 					<view class="uni-media-list">
 						<view class="uni-media-list-name">
@@ -19,7 +19,7 @@
 						</view>
 						<view class="uni-media-list-body">
 							<view class="uni-media-list-text-top">
-								<text class="title">「{{ value.sentence }}」</text>
+								<sentence-html :htmlNodes = "value.sentenceNodes"/>
 							</view>
 							<view class="uni-media-list-text-bottom">
 								<text>{{value.book}}•{{value.title}}</text>
@@ -41,6 +41,8 @@
 
 <script>
 	import { dateUtils } from  '../../common/util.js';
+    import sentenceHtml from './sentence-html.vue'
+	import htmlParser from '@/common/html-parser.js'
 	import {  
         mapState,  
         mapMutations  
@@ -53,11 +55,14 @@
         methods: {  
             ...mapMutations(['loadBook'])  
         },
+
+		components: {
+			sentenceHtml
+		},
 		data() {
 			return {
 				banner: {},
 				listData: [],
-				nameListData: [],
 				last_id: '',
 				reload: false,
 				status: 'more',
@@ -84,11 +89,22 @@
 			const {tab, surname} = formData
 			this.tab = tab
 			this.surname = surname
-			this.nameListData = this.namer.getNames(tab.id,10)
-			console.log('onLoad nameListData = '+ JSON.stringify(this.nameListData))
-			// this.adpid = this.$adpid;
-			// this.getBanner();
-			// this.getList();
+			this.getList()
+			// const names = this.namer.getNames(tab.id, 10);
+			// this.listData = names.map(function(element){
+			// 	const sentence = element.sentence;
+			// 	const nameGrop = element.nameGrop;
+			// 	var sentenceH5 = sentence.replace(nameGrop[0],"<i>"+nameGrop[0]+"</i>");
+			// 	if(nameGrop.length > 1){
+			// 		sentenceH5 = sentenceH5.replace(nameGrop[1],"<i>"+nameGrop[1]+"</i>");
+			// 	}
+			// 	const sentenceNodes = htmlParser(sentenceH5)
+			// 	console.log('onLoad sentenceNodes='+JSON.stringify(sentenceNodes))
+			// 		return {
+			// 			...element,
+			// 			sentenceNodes
+			// 		};
+			// })
 		},
 		onPullDownRefresh() {
 			this.reload = true;
@@ -120,51 +136,47 @@
 				});
 			},
 			getList() {
-				// var data = {
-				// 	column: 'id,post_id,title,author_name,cover,published_at' //需要的字段名
-				// };
-				// if (this.last_id) {
-				// 	//说明已有数据，目前处于上拉加载
-				// 	this.status = 'loading';
-				// 	data.minId = this.last_id;
-				// 	data.time = new Date().getTime() + '';
-				// 	data.pageSize = 10;
-				// }
-				// uni.request({
-				// 	url: 'https://unidemo.dcloud.net.cn/api/news',
-				// 	data: data,
-				// 	success: data => {
-				// 		if (data.statusCode == 200) {
-				// 			let list = this.setTime(data.data);
-				// 			this.listData = this.reload ? list : this.listData.concat(list);
-				// 			this.last_id = list[list.length - 1].id;
-				// 			this.reload = false;
-				// 		}
-				// 	},
-				// 	fail: (data, code) => {
-				// 		console.log('fail' + JSON.stringify(data));
-				// 	}
-				// });
-                if(this.nameListData){
+				const names = this.namer.getNames(this.tab.id, 10);
+				const listData = names.map(function(element){
+					const sentence = element.sentence;
+					const nameGrop = element.nameGrop;
+					var sentenceH5 = sentence.replace(nameGrop[0],"<i>"+nameGrop[0]+"</i>");
+					if(nameGrop.length > 1){
+						sentenceH5 = sentenceH5.replace(nameGrop[1],"<i>"+nameGrop[1]+"</i>");
+					}
+					const sentenceNodes = htmlParser(sentenceH5)
+					console.log('onLoad sentenceNodes='+JSON.stringify(sentenceNodes))
+						return {
+							...element,
+							sentenceNodes
+						};
+				})
+				if(this.listData){
 						//说明已有数据，目前处于上拉加载
 					this.status = 'loading';
+					this.listData = this.listData.concat(listData)
+				}else{
+					this.listData = listData
 				}
-				this.nameListData = this.nameListData.concat(this.namer.getNames(this.tab.id, 10))
+				
 				this.reload = true;
-				console.log('getList nameListData = '+ JSON.stringify(this.nameListData))
+				console.log('getList listData = '+ JSON.stringify(this.listData))
 			},
 			goDetail: function(e) {
 				// 				if (!/前|刚刚/.test(e.published_at)) {
 				// 					e.published_at = dateUtils.format(e.published_at);
 				// 				}
+				const surname = this.surname;
 				let detail = {
 					author_name: e.author,
-					cover: e.cover,
 					id: e.id,
 					post_id: e.post_id,
 					published_at: e.book+'•'+e.title,
 					title: e.title,
-					content: e.content
+					content: e.content,
+					surname,
+					name: e.name,
+					nameGrop: e.nameGrop
 				};
 				uni.navigateTo({
 					url: '../list2detail-detail/list2detail-detail?detailDate=' + encodeURIComponent(JSON.stringify(detail))
@@ -184,8 +196,13 @@
 				});
 				return newItems;
 			},
+			
 			aderror(e) {
 				console.log("aderror: " + JSON.stringify(e.detail));
+			},
+
+			getTextHtml(text){
+                  return <i>{{text}}</i>
 			}
 		}
 	};
@@ -240,17 +257,18 @@
 	
 
 	.name-group .name{
-        background-color: #fff9f9;
-		color: #262626;
-		font-size: 36rpx;
-		font-weight: bold;
 		width: 60rpx;
-		height: 56rpx;
+		height: 60rpx;
+		background-image: url(@/static/img/tiange.png);
+		background-size: cover;
+		justify-content: center;
+		align-items: center;
+		display: flex;
+
+		color: #262626;
+		font-size: 32rpx;
+		font-weight: bold;
 		text-align: center;
-		padding-top: 3rpx;
-		border-width: 0.1rpx;
-		border-style: solid;
-		border-color:  #a43636;
 	}
 
 	

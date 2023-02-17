@@ -127,8 +127,12 @@ export default {
                 ',birthdate = '+this.birthdate
                 );
                 if(surname == '' || surname == undefined){
-                //    alert('请输入姓氏')
                 this.messageToggle('error','请输入姓氏');
+                   return
+                }
+
+                if(surname.length > 1){
+                this.messageToggle('error','目前只支持单姓');
                    return
                 }
                 var birthdate = this.birthdate
